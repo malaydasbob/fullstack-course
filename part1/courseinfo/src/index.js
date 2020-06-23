@@ -1,72 +1,47 @@
-import React from 'react'
+import React, {useState} from 'react'
 import ReactDOM from 'react-dom'
 
-const App = () => {
-  
-  const course = {
-    name: 'Half Stack application development',
-    parts: [
-      {
-        name: 'Fundamentals of React',
-        exercises: 10
-      },
-      {
-        name: 'Using props to pass data',
-        exercises: 7
-      },
-      {
-        name: 'State of a component',
-        exercises: 14
-      }
-    ]
+const History  = ({allClicks}) => {
+  if(allClicks.length === 0){
+    return(
+      <div>
+        <p>Press buttons to see the results</p>
+      </div>
+    )    
   }
 
   return (
     <div>
-      <Header course = {course.name}/>
-      <Content parts = {course.parts}/>
-      <Total parts = {course.parts}/>
+      <p>{allClicks.join(' ')}</p>
     </div>
   )
 }
 
-const Header = (props) => {
-  console.log(props)
-  return (
-    <>
-      <h1>{props.course}</h1>
-    </>
-  )
-}
+const Button = ({title, handleClick}) => (
+  <button onClick={handleClick}>{title}</button>
+)
 
-const Content = (props) => {
-  console.log(props)
-  return (
-    <>
-      <Part name = {props.parts[0].name} exercises = {props.parts[0].exercises}/>
-      <Part name = {props.parts[1].name} exercises = {props.parts[1].exercises}/>
-      <Part name = {props.parts[2].name} exercises = {props.parts[2].exercises}/>
-    </>
-  )
-}
+const App = () => {
+  const [clicks, setClicks] = useState({left: 0, right: 0})
+  const [allClicks, setAll] = useState([])
 
-const Part = (props) => {
-  console.log(props)
-  return(
-    <>
-      <p>
-        {props.name} {props.exercises}
-      </p>
-    </>
-  )
-}
+  const handleLeftClick = () => {
+    setClicks({...clicks, left : clicks.left + 1 })
+    setAll(allClicks.concat('L'))
+  }
+  const handleRightClick = () => {
+    setClicks({...clicks, right : clicks.right + 1})
+    setAll(allClicks.concat('R'))
+  }
 
-const Total = (props) => {
-  console.log(props)
   return (
-    <>
-    <p>Number of exercises {props.parts[0].exercises + props.parts[1].exercises + props.parts[2].exercises}</p>
-    </>
+    <div>
+      {clicks.left}
+      <Button title='left' handleClick={handleLeftClick}></Button>
+      <Button title='right' handleClick={handleRightClick}></Button>
+      {clicks.right}
+      <History allClicks={allClicks}></History>
+    </div>
   )
 }
 
